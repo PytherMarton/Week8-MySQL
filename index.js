@@ -98,6 +98,9 @@ const main = async () => {
         console.log(`Card: ${card.name} -> ${card.description}`);
     }
 
+    // Deletes the Card details but keeps the Card.
+    // await Card.truncate(); 
+
 
     console.log("Connection has been successfully estabilished.");
   } catch (error) {
