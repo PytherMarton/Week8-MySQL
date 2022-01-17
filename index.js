@@ -1,9 +1,12 @@
+require("dotenv").config();
 const { Sequelize, DataTypes, Op } = require("sequelize");
 
-const connection = new Sequelize("master32", "root", "password", {
-  host: "localhost",
-  dialect: "mysql",
-});
+// const connection = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
+//   host: process.env.DB_HOST,
+//   dialect: process.env.DB_DIALECT
+// });
+
+const connection = new Sequelize(process.env.DB_URI);
 
 const Card = connection.define(
   "Card",
@@ -13,13 +16,23 @@ const Card = connection.define(
       allowNull: false,
     },
 
+    types: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+
     description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
 
-    cost: {
+    manaCost: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    rarity: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -47,56 +60,61 @@ const main = async () => {
 
     // Create and save in 1 step.
 
-    // await Card.create({
-    //     name: "Meteor Golem",
-    //     cost: 7,
-    //     description: "When this enters the battelfield...."
-    // })
+    await Card.create({
+        name: "Gaseous Form",
+        manaCost: 3,
+        types: "Enchantment — Aura",
+        description: "Prevent all combat damage that would be dealt to and dealt by enchanted creature.",
+        rarity: "Common"
+    })
 
-    // for(let card of await Card.findAll()) {
-    //     console.log(`Card: ${card.name} -> ${card.description}`);
-    // };
+    for(let card of await Card.findAll()) {
+        // console.log(`Card: ${card.name} -> ${card.description}`);
+        const cards = await Card.findAll({});
+        console.log(cards.every(user => user instanceof Card));
+        console.log("All Cards: ", JSON.stringify(cards, null, 2));
+    };
 
     // for(let card of await Card.findAll({where: {name:"Stuffy Doll"}})) {
     //     console.log(`Card: ${card.name} -> ${card.description}`);
     // };
 
-    const results = await Card.findAll({
-        attributes: ["name", "description"],
-        where: {
-            [Op.or]: [
-                {name: "Stuffy Doll"},
-                {cost: 7}
-            ]
-        }
-    });
+    // const results = await Card.findAll({
+    //     attributes: ["name", "description"],
+    //     where: {
+    //         [Op.or]: [
+    //             {name: "Stuffy Doll"},
+    //             {cost: 7}
+    //         ]
+    //     }
+    // });
 
-    for(let card of results) {
-        console.log(`Card: ${card.name} -> ${card.description}`);
-    }
+    // for(let card of results) {
+    //     console.log(`Card: ${card.name} -> ${card.description}`);
+    // }
 
-    await Card.update({name: "Precursor Golem"}, {
-        where: {
-            name: "Meteor Golem"
-        }
-    });
+    // await Card.update({name: "Precursor Golem"}, {
+    //     where: {
+    //         name: "Meteor Golem"
+    //     }
+    // });
 
-    for(let card of await Card.findAll()) {
-        console.log(`Card: ${card.name} -> ${card.description}`);
-    }
+    // for(let card of await Card.findAll()) {
+    //     console.log(`Card: ${card.name} -> ${card.description}`);
+    // }
 
-    await Card.destroy({
-        where: {
-            [Op.or]: [
-                {name: "Stuffy Doll"},
-                {name: "Precursor Golem"}
-            ]
-        }
-    });
+    // await Card.destroy({
+    //     where: {
+    //         [Op.or]: [
+    //             {name: "Stuffy Doll"},
+    //             {name: "Precursor Golem"}
+    //         ]
+    //     }
+    // });
 
-    for(let card of await Card.findAll()) {
-        console.log(`Card: ${card.name} -> ${card.description}`);
-    }
+    // for(let card of await Card.findAll()) {
+    //     console.log(`Card: ${card.name} -> ${card.description}`);
+    // }
 
     // Deletes the Card details but keeps the Card.
     // await Card.truncate(); 
