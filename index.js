@@ -60,13 +60,13 @@ const main = async () => {
 
     // Create and save in 1 step.
 
-    await Card.create({
-        name: "Gaseous Form",
-        manaCost: 3,
-        types: "Enchantment — Aura",
-        description: "Prevent all combat damage that would be dealt to and dealt by enchanted creature.",
-        rarity: "Common"
-    })
+    // await Card.create({
+    //     name: "Gaseous Form",
+    //     manaCost: 3,
+    //     types: "Enchantment — Aura",
+    //     description: "Prevent all combat damage that would be dealt to and dealt by enchanted creature.",
+    //     rarity: "Common"
+    // })
 
     for(let card of await Card.findAll()) {
         // console.log(`Card: ${card.name} -> ${card.description}`);
